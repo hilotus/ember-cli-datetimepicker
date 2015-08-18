@@ -1,0 +1,29 @@
+<button class="{{buttonClass}}" {{action 'openPicker' on="click"}}>{{value}}</button>
+
+<div class="dp {{if isOpen 'show' 'hidden'}} {{if isUp 'up'}}">
+  <div class="dp-title">
+    <div class="dp-past" {{action 'pastMonth'}}><i class="fa fa-caret-left"></i></div>
+    <span>{{monthName}} {{year}}</span>
+    <div class="dp-next" {{action 'nextMonth'}}><i class="fa fa-caret-right"></i></div>
+  </div>
+  <div class="dp-body">
+    <table>
+      <thead>
+        <tr>
+          {{#each weekOptions as |option|}}
+            <th>{{option}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each weekDates as |weekDate|}}
+          <tr>
+            {{#each weekDate as |d index|}}
+              <td class="{{if d.isPastDate 'dp-past-date'}} {{if d.isNextDate 'dp-next-date'}} {{is-equals d.dateArray today 'dp-today'}} {{is-equals d.dateArray selectedDate 'dp-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
