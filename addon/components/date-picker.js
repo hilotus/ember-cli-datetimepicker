@@ -44,14 +44,7 @@ export default Ember.Component.extend({
   init: function () {
     this._super.apply(this, arguments);
 
-    if (!this.model || !Ember.isArray(this.model) || this.model.length !== 3) {
-      throw new Ember.Error("Datepicker's model must be an array of length 3.");
-    }
-
-    var model = this.get('model');
-    this.set('year', model[0]);
-    this.set('month', model[1]);
-    this.set('date', model[2]);
+    this.modelSetup();
 
     var today = new Date();
     this.set('currentYear', today.getFullYear());
@@ -59,8 +52,16 @@ export default Ember.Component.extend({
     this.set('currentDate', today.getDate());
   },
 
-  resetModel: function (year, month, date) {
-    this.set('model', [year, month, date]);
+  modelChanged: Ember.observer('model', function () { this.modelSetup(); }),
+
+  modelSetup: function () {
+    var model = this.get('model');
+    if (!model || !Ember.isArray(model) || model.length !== 3) {
+      throw new Ember.Error("DatePicker's model must be an array of length 3.");
+    }
+    this.set('year', model[0]);
+    this.set('month', model[1]);
+    this.set('date', model[2]);
   },
 
   // TODO: use jquery ui position.
@@ -79,7 +80,7 @@ export default Ember.Component.extend({
         winHeight = Ember.$(window).height(),
         height = this.$().find('.dp').height();
 
-      this.set('isUp', top > winHeight && winHeight - top < height);
+      this.set('isUp', winHeight - top < height);
 
       if (this.isUp) {
         this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
@@ -91,38 +92,37 @@ export default Ember.Component.extend({
     },
 
     selectDate: function (date) {
-      this.set('year', date.get('year'));
-      this.set('month', date.get('month'));
-      this.set('date', date.get('date'));
-      this.set('model', [this.year, this.month, this.date]);
-      this.set('selectedDate', [this.year, this.month, this.date]);
+      this.set('model', [date.get('year'), date.get('month'), date.get('date')]);
+      this.set('selectedDate', this.get('model'));
       this.set('isOpen', false);
     },
 
     pastMonth: function () {
       var month = window.parseInt(this.get('month')),
-        year = window.parseInt(this.get('year'));
+        year = window.parseInt(this.get('year')),
+        date = window.parseInt(this.get('date'));
 
       if (month === 1) {
-        this.set('month', 12);
-        this.set('year', year - 1);
+        month = 12;
+        year = year - 1;
       } else {
-        this.set('month', month - 1);
+        month = month - 1;
       }
-      this.resetModel(this.year, this.month, this.date);
+      this.set('model', [year, month, date]);
     },
 
     nextMonth: function () {
       var month = window.parseInt(this.get('month')),
-        year = window.parseInt(this.get('year'));
+        year = window.parseInt(this.get('year')),
+        date = window.parseInt(this.get('date'));
 
       if (month === 12) {
-        this.set('month', 1);
-        this.set('year', year + 1);
+        month = 1;
+        year = year + 1;
       } else {
-        this.set('month', month + 1);
+        month = month + 1;
       }
-      this.resetModel(this.year, this.month, this.date);
+      this.set('model', [year, month, date]);
     }
   }
 });
