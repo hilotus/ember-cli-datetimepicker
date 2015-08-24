@@ -2,9 +2,9 @@
 
 <div class="dp {{if isOpen 'show' 'hidden'}} {{if isUp 'up'}}">
   <div class="dp-title">
-    <div class="dp-past" {{action 'pastMonth'}}><i class="fa fa-caret-left"></i></div>
+    <div class="dp-past" {{action 'pastMonth'}}><span aria-hidden="true">&laquo;</span></div>
     <span>{{monthName}} {{year}}</span>
-    <div class="dp-next" {{action 'nextMonth'}}><i class="fa fa-caret-right"></i></div>
+    <div class="dp-next" {{action 'nextMonth'}}><span aria-hidden="true">&raquo;</span></div>
   </div>
   <div class="dp-body">
     <table>
