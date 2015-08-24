@@ -1,6 +1,14 @@
 import Ember from 'ember';
 import generateDates from 'ember-cli-datetimepicker/generate-dates';
 
+function leftPad(num, size) {
+  var s = num + "";
+  while (s.length < size) {
+    s = "0" + s;
+  }
+  return s;
+}
+
 export default Ember.Component.extend({
   classNames: ['dp-wrapper'],
   isOpen: false,
@@ -12,11 +20,14 @@ export default Ember.Component.extend({
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
   model: [],
+
   selectedDate: [],
 
   value: Ember.computed('model', function () {
-    if (Ember.isArray(this.model) && this.model.length === 3) {
-      return this.model[0] + '-' + this.model[1] + '-' + this.model[2];
+    var model = this.get('model');
+
+    if (Ember.isArray(model) && model.length === 3) {
+      return model[0] + '-' + leftPad(model[1], 2) + '-' + leftPad(model[2], 2);
     } else {
       return '';
     }
@@ -44,21 +55,23 @@ export default Ember.Component.extend({
   init: function () {
     this._super.apply(this, arguments);
 
-    this.modelSetup();
-
     var today = new Date();
     this.set('currentYear', today.getFullYear());
     this.set('currentMonth', today.getMonth() + 1);
     this.set('currentDate', today.getDate());
+
+    this.modelSetup();
   },
 
   modelChanged: Ember.observer('model', function () { this.modelSetup(); }),
 
   modelSetup: function () {
     var model = this.get('model');
+
     if (!model || !Ember.isArray(model) || model.length !== 3) {
       throw new Ember.Error("DatePicker's model must be an array of length 3.");
     }
+
     this.set('year', model[0]);
     this.set('month', model[1]);
     this.set('date', model[2]);
@@ -76,19 +89,23 @@ export default Ember.Component.extend({
 
   actions: {
     openPicker: function () {
-      var top = this.$().position().top,
-        winHeight = Ember.$(window).height(),
-        height = this.$().find('.dp').height();
-
-      this.set('isUp', winHeight - top < height);
-
-      if (this.isUp) {
-        this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
+      if (this.isOpen) {
+        this.set('isOpen', false);
       } else {
-        this.$().find('.dp').removeAttr('style');
-      }
+        var top = this.$().position().top,
+          winHeight = Ember.$(window).height(),
+          height = this.$().find('.dp').height();
 
-      this.set('isOpen', !this.isOpen);
+        this.set('isUp', winHeight - top < height);
+
+        if (this.isUp) {
+          this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
+        } else {
+          this.$().find('.dp').removeAttr('style');
+        }
+
+        this.set('isOpen', true);
+      }
     },
 
     selectDate: function (date) {

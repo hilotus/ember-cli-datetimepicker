@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   date: ['2014', '12', '12'],
 
-  time: ['04', '05', 'PM'],
+  date2: [2015, 8, 20],
 
-  time2: ['04', '05', 'AM']
+  time: ['04', '05', 'PM']
 });
