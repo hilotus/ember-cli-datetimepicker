@@ -11,39 +11,57 @@ function leftPad(num, size) {
 export default Ember.Component.extend({
   classNames: ['tp'],
 
-  model: [],
   isFocus: false,
 
-  modelChanged: Ember.observer('model', function () { this.modelSetup(); }),
+  /*
+    [hour, minute, period]
+    [11, 11, 'AM']
+  */
+  current: Ember.computed(function () {
+    var t = new Date(),
+      hour = t.getHours(),
+      minute = t.getMinutes();
 
-  init: function () {
-    this._super.apply(this, arguments);
-    this.modelSetup();
-  },
-
-  modelSetup: function () {
-    var model = this.get('model');
-
-    if (!model || !Ember.isArray(model) || model.length !== 3) {
-      throw new Ember.Error("TimePicker's model must be an array of length 3.");
+    if (hour / 12 < 1) {
+      return [hour, minute, 'AM'];
+    } else {
+      return [hour - 12, minute, 'PM'];
     }
+  }),
 
-    this.set('hour', leftPad(model[0], 2));
-    this.set('minute', leftPad(model[1], 2));
-    this.set('period', model[2]);
-  },
+  selected: [],
 
-  setup: function () {
-    Ember.run.schedule('afterRender', this, function () {
-      this.$().find('input')
-        .on('focus', function () {
-          this.set('isFocus', true);
-        }.bind(this))
-        .on('blur', function () {
-          this.set('isFocus', false);
-        }.bind(this));
-    });
-  }.on('didInsertElement'),
+  model: Ember.computed('selected', {
+    get: function () {
+      return this.get('selected');
+    },
+
+    set: function (key, value) {
+      value = value || this.get('current');
+      this.set('selected', value);
+      return value;
+    }
+  }),
+
+  hour: Ember.computed('model', function () {
+    return leftPad(this.get('model')[0], 2);
+  }),
+
+  minute: Ember.computed('model', function () {
+    return leftPad(this.get('model')[1], 2);
+  }),
+
+  period: Ember.computed('model', {
+    get: function () {
+      return this.get('model')[2];
+    },
+
+    set: function (key, value) {
+      var model = this.get('model');
+      this.set('model', [model[0], model[1], value]);
+      return value;
+    }
+  }),
 
   keyDown: function (event) {
     var keyCode = event.which || event.keyCode,
@@ -72,6 +90,24 @@ export default Ember.Component.extend({
       return true;
     } else {
       return false;
+    }
+  },
+
+  focusIn: function (event) {
+    var $ele = Ember.$(event.target),
+      hasInput = $ele.hasClass('input-hour') || $ele.hasClass('input-minute');
+
+    if (hasInput) {
+      this.set('isFocus', true);
+    }
+  },
+
+  focusOut: function (event) {
+    var $ele = Ember.$(event.target),
+      hasInput = $ele.hasClass('input-hour') || $ele.hasClass('input-minute');
+
+    if (hasInput) {
+      this.set('isFocus', false);
     }
   }
 });

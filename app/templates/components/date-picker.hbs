@@ -19,7 +19,7 @@
         {{#each weekDates as |weekDate|}}
           <tr>
             {{#each weekDate as |d index|}}
-              <td class="{{if d.isPastDate 'dp-past-date'}} {{if d.isNextDate 'dp-next-date'}} {{is-equals d.dateArray today 'dp-today'}} {{is-equals d.dateArray selectedDate 'dp-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
+              <td class="{{if d.isPastDate 'dp-past-date'}} {{if d.isNextDate 'dp-next-date'}} {{is-equals d.dateArray today 'dp-today'}} {{is-equals d.dateArray selected 'dp-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
             {{/each}}
           </tr>
         {{/each}}

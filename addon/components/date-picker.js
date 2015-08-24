@@ -13,15 +13,46 @@ export default Ember.Component.extend({
   classNames: ['dp-wrapper'],
   isOpen: false,
   isUp: false,
-  format: "yyyy-mm-dd",
+  format: "YYYY-MM-DD",
 
   __cache__: {},
   weekOptions: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
-  model: [],
+  /*
+    [year, month, date]
+    [2014, 10, 10]
+  */
+  today: Ember.computed(function () {
+    var t = new Date();
+    return [t.getFullYear(), t.getMonth() + 1, t.getDate()];
+  }),
 
-  selectedDate: [],
+  selected: [],
+
+  model: Ember.computed('selected', {
+    get: function () {
+      return this.get('selected');
+    },
+
+    set: function (key, value) {
+      value = value || this.get('today');
+      this.set('selected', value);
+      return value;
+    }
+  }),
+
+  year: Ember.computed('model', function () {
+    return this.get('model')[0];
+  }),
+
+  month: Ember.computed('model', function () {
+    return this.get('model')[1];
+  }),
+
+  date: Ember.computed('model', function () {
+    return this.get('model')[2];
+  }),
 
   value: Ember.computed('model', function () {
     var model = this.get('model');
@@ -34,75 +65,37 @@ export default Ember.Component.extend({
   }),
 
   monthName: Ember.computed('month', function () {
-    return this.monthNames[this.get('month') - 1];
+    return this.get('monthNames.%@'.fmt(this.get('month') - 1));
   }),
 
   weekDates: Ember.computed('year', 'month', function () {
     var dates;
-    dates = this.get("__cache__." + this.year + "-" + this.month);
+    dates = this.get("__cache__." + this.get('year') + "-" + this.get('month'));
     if (dates) {
       return dates;
     }
-    dates = generateDates(this.year, this.month);
-    this.set("__cache__." + this.year + "-" + this.month, dates);
+    dates = generateDates(this.get('year'), this.get('month'));
+    this.set("__cache__." + this.get('year') + "-" + this.get('month'), dates);
     return dates;
   }),
-
-  today: Ember.computed('currentYear', 'currentMonth', 'currentDate', function() {
-    return [this.currentYear, this.currentMonth, this.currentDate];
-  }),
-
-  init: function () {
-    this._super.apply(this, arguments);
-
-    var today = new Date();
-    this.set('currentYear', today.getFullYear());
-    this.set('currentMonth', today.getMonth() + 1);
-    this.set('currentDate', today.getDate());
-
-    this.modelSetup();
-  },
-
-  modelChanged: Ember.observer('model', function () { this.modelSetup(); }),
-
-  modelSetup: function () {
-    var model = this.get('model');
-
-    if (!model || !Ember.isArray(model) || model.length !== 3) {
-      throw new Ember.Error("DatePicker's model must be an array of length 3.");
-    }
-
-    this.set('year', model[0]);
-    this.set('month', model[1]);
-    this.set('date', model[2]);
-  },
-
-  // TODO: use jquery ui position.
-  // setup: function () {
-  //   this.$().find('.dp').position({
-  //     my: "center top",
-  //     at: "center bottom",
-  //     of: this.$().find('button'),
-  //     collision: 'flipfit'
-  //   });
-  // }.on('didInsertElement'),
 
   actions: {
     openPicker: function () {
       if (this.isOpen) {
         this.set('isOpen', false);
       } else {
-        var top = this.$().position().top,
-          winHeight = Ember.$(window).height(),
-          height = this.$().find('.dp').height();
+        // TODO: popup direction
+        // var top = this.$().position().top,
+        //   winHeight = Ember.$(window).height(),
+        //   height = this.$().find('.dp').height();
 
-        this.set('isUp', winHeight - top < height);
+        // this.set('isUp', winHeight - top < height);
 
-        if (this.isUp) {
-          this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
-        } else {
-          this.$().find('.dp').removeAttr('style');
-        }
+        // if (this.isUp) {
+        //   this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
+        // } else {
+        //   this.$().find('.dp').removeAttr('style');
+        // }
 
         this.set('isOpen', true);
       }
@@ -110,7 +103,6 @@ export default Ember.Component.extend({
 
     selectDate: function (date) {
       this.set('model', [date.get('year'), date.get('month'), date.get('date')]);
-      this.set('selectedDate', this.get('model'));
       this.set('isOpen', false);
     },
 
