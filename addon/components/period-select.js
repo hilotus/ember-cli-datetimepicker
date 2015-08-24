@@ -2,8 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tagName: 'select',
-
-  content: ['AM', 'PM'],
+  periods: ['AM', 'PM'],
   value: null,
 
   setup: function () {

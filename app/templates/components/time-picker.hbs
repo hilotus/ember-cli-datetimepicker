@@ -1,7 +1,7 @@
 <div class="input-fake {{if isFocus 'focus'}}">
-  <input value={{hour}} {{action 'hourKeyDown' on='keyDown' allowedKeys="alt"}}>
+  {{input value=hour class="input-hour" tabindex="0"}}
   :
-  <input value={{minute}} {{action 'minuteKeyDown' on='keyDown' allowedKeys="alt"}}>
+  {{input value=minute class="input-minute" tabindex="0"}}
 
   {{period-select value=period}}
 </div>

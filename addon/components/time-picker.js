@@ -1,5 +1,13 @@
 import Ember from 'ember';
 
+function leftPad(num, size) {
+  var s = num + "";
+  while (s.length < size) {
+    s = "0" + s;
+  }
+  return s;
+}
+
 export default Ember.Component.extend({
   classNames: ['tp'],
 
@@ -18,8 +26,8 @@ export default Ember.Component.extend({
     if (!model || !Ember.isArray(model) || model.length !== 3) {
       throw new Ember.Error("TimePicker's model must be an array of length 3.");
     }
-    this.set('hour', window.parseInt(model[0]));
-    this.set('minute', window.parseInt(model[1]));
+    this.set('hour', leftPad(model[0]));
+    this.set('minute', leftPad(model[1]));
     this.set('period', model[2]);
   },
 
@@ -35,17 +43,34 @@ export default Ember.Component.extend({
     });
   }.on('didInsertElement'),
 
-  actions: {
-    hourKeyDown: function () {
-      var hour = this.get('hour'),
-        period = this.get('period');
+  keyDown: function (event) {
+    var keyCode = event.which || event.keyCode,
+      $ele = Ember.$(event.target),
+      hour = parseInt(this.get('hour')),
+      minute = parseInt(this.get('minute')),
+      isHourInput = $ele.hasClass('input-hour'),
+      isMinInput = $ele.hasClass('input-minute');
 
-      if (hour === 11) {
+    if (keyCode === 38) {  // up
+      if (isHourInput) {
+        hour = hour === 11 ? 0 : (hour + 1);
+        this.set('hour', leftPad(hour, 2));
+      } else if (isMinInput) {
+        minute = minute === 59 ? 0 : (minute + 1);
+        this.set('minute', leftPad(minute, 2));
       }
-    },
-
-    minuteKeyDown: function () {
-
+    } else if (keyCode === 40) {  // down
+      if (isHourInput) {
+        hour = hour === 0 ? 11 : (hour - 1);
+        this.set('hour', leftPad(hour, 2));
+      } else if (isMinInput) {
+        minute = minute === 0 ? 59 : (minute - 1);
+        this.set('minute', leftPad(minute, 2));
+      }
+    } else if (keyCode === 37 || keyCode === 39 || keyCode === 9) {  // left, right, tab
+      return true;
+    } else {
+      return false;
     }
   }
 });
