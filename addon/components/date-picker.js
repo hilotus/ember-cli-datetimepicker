@@ -84,18 +84,17 @@ export default Ember.Component.extend({
       if (this.isOpen) {
         this.set('isOpen', false);
       } else {
-        // TODO: popup direction
-        // var top = this.$().position().top,
-        //   winHeight = Ember.$(window).height(),
-        //   height = this.$().find('.dp').height();
+        var top = this.$().offset().top,
+          winHeight = Ember.$(window).height(),
+          dpHeight = this.$().find('.dp').height();
 
-        // this.set('isUp', winHeight - top < height);
+        this.set('isUp', winHeight - top < dpHeight);
 
-        // if (this.isUp) {
-        //   this.$().find('.dp').css({top: '-' + (height + 1)+ 'px'});
-        // } else {
-        //   this.$().find('.dp').removeAttr('style');
-        // }
+        if (this.isUp) {
+          this.$().find('.dp').css({top: '-' + (dpHeight + 3)+ 'px'});
+        } else {
+          this.$().find('.dp').removeAttr('style');
+        }
 
         this.set('isOpen', true);
       }

@@ -1,6 +1,6 @@
 <button class="{{buttonClass}}" {{action 'openPicker' on="click"}}>{{value}}</button>
 
-<div class="dp {{if isOpen 'show' 'hidden'}} {{if isUp 'up'}}">
+<div class="dp {{if isOpen 'visible' 'invisible'}} {{if isUp 'up'}}">
   <div class="dp-title">
     <div class="dp-past" {{action 'pastMonth'}}><span aria-hidden="true">&laquo;</span></div>
     <span>{{monthName}} {{year}}</span>
