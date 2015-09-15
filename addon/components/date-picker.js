@@ -79,7 +79,39 @@ export default Ember.Component.extend({
     return dates;
   }),
 
+  /*
+    click else where to close the popuped modal.
+  */
+  onClickElsewhere: function(event) {
+    // send action to component.
+    this.send('toggleOpen', event);
+  },
+
+  didInsertElement: function() {
+    this._super.apply(this, arguments);
+    return Ember.$(document).on('click', Ember.$.proxy(this.get('onClickElsewhere'), this));
+  },
+
+  willDestroyElement: function() {
+    this._super.apply(this, arguments);
+    Ember.$(document).off('click', Ember.$.proxy(this.get('onClickElsewhere'), this));
+  },
+
   actions: {
+    toggleOpen: function(event)  {
+      var isOutside = false,
+        $self;
+
+      if (event && ($self = this.$()[0])) {
+        isOutside = !$self.contains(event.target);
+        if (isOutside) {
+          this.set('isOpen', false);
+        }
+      } else {
+        this.set('isOpen', !this.get('isOpen'));
+      }
+    },
+
     openPicker: function () {
       if (this.isOpen) {
         this.set('isOpen', false);
