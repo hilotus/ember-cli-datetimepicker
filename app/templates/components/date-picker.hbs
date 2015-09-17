@@ -1,12 +1,12 @@
 <button class="{{buttonClass}}" {{action 'openPicker' on="click"}}>{{value}}</button>
 
-<div class="dp {{if isOpen 'visible' 'invisible'}} {{if isUp 'up'}}">
-  <div class="dp-title">
-    <div class="dp-past" {{action 'pastMonth'}}><span aria-hidden="true">&laquo;</span></div>
+<div class="date-picker-modal {{if isOpen 'visible' 'invisible'}} {{if isUp 'up'}}">
+  <div class="date-picker-title">
+    <div class="date-picker-past" {{action 'pastMonth'}}><span aria-hidden="true">&laquo;</span></div>
     <span>{{monthName}} {{year}}</span>
-    <div class="dp-next" {{action 'nextMonth'}}><span aria-hidden="true">&raquo;</span></div>
+    <div class="date-picker-next" {{action 'nextMonth'}}><span aria-hidden="true">&raquo;</span></div>
   </div>
-  <div class="dp-body">
+  <div class="date-picker-body">
     <table>
       <thead>
         <tr>
@@ -19,7 +19,7 @@
         {{#each weekDates as |weekDate|}}
           <tr>
             {{#each weekDate as |d index|}}
-              <td class="{{if d.isPastDate 'dp-past-date'}} {{if d.isNextDate 'dp-next-date'}} {{is-equals d.dateArray today 'dp-today'}} {{is-equals d.dateArray selected 'dp-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
+              <td class="{{if d.isPastDate 'date-picker-past-date'}} {{if d.isNextDate 'date-picker-next-date'}} {{is-equals d.dateArray today 'date-picker-today'}} {{is-equals d.dateArray selected 'date-picker-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
             {{/each}}
           </tr>
         {{/each}}

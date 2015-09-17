@@ -9,7 +9,7 @@ function leftPad(num, size) {
 }
 
 export default Ember.Component.extend({
-  classNames: ['tp'],
+  classNames: ['time-picker'],
 
   isFocus: false,
 

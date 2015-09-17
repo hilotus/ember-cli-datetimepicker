@@ -26,7 +26,7 @@ var dayOfYear = function (year, month, date) {
   return count + date;
 };
 
-var daysInGregorianMonth = function (year, month) {
+export var daysInGregorianMonth = function (year, month) {
   var days;
   days = __daysInGregorianMonth[month - 1];
   if (month === 2 && isGregorianLeapYear(year)) {
@@ -88,7 +88,7 @@ Calendar.reopenClass({
 /*
   Generate dates of month for calendar
 */
-var generateDates = function (year, month) {
+export var generateDates = function (year, month) {
   year = window.parseInt(year);
   month = window.parseInt(month);
 
@@ -139,5 +139,3 @@ var generateDates = function (year, month) {
 
   return rows;
 };
-
-export default generateDates;

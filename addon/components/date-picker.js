@@ -1,68 +1,16 @@
 import Ember from 'ember';
-import generateDates from 'ember-cli-datetimepicker/generate-dates';
+import dateUtils from 'ember-cli-datetimepicker/date-utils';
+import datePickerMixin from 'ember-cli-datetimepicker/mixins/date-picker';
 
-function leftPad(num, size) {
-  var s = num + "";
-  while (s.length < size) {
-    s = "0" + s;
-  }
-  return s;
-}
-
-export default Ember.Component.extend({
-  classNames: ['dp-wrapper'],
+// model is array, [2015, 01, 01]
+export default Ember.Component.extend(datePickerMixin, {
+  classNames: ['date-picker'],
   isOpen: false,
   isUp: false,
-  format: "YYYY-MM-DD",
 
   __cache__: {},
   weekOptions: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-
-  /*
-    [year, month, date]
-    [2014, 10, 10]
-  */
-  today: Ember.computed(function () {
-    var t = new Date();
-    return [t.getFullYear(), t.getMonth() + 1, t.getDate()];
-  }),
-
-  selected: [],
-
-  model: Ember.computed('selected', {
-    get: function () {
-      return this.get('selected');
-    },
-
-    set: function (key, value) {
-      value = value || this.get('today');
-      this.set('selected', value);
-      return value;
-    }
-  }),
-
-  year: Ember.computed('model', function () {
-    return this.get('model')[0];
-  }),
-
-  month: Ember.computed('model', function () {
-    return this.get('model')[1];
-  }),
-
-  date: Ember.computed('model', function () {
-    return this.get('model')[2];
-  }),
-
-  value: Ember.computed('model', function () {
-    var model = this.get('model');
-
-    if (Ember.isArray(model) && model.length === 3) {
-      return model[0] + '-' + leftPad(model[1], 2) + '-' + leftPad(model[2], 2);
-    } else {
-      return '';
-    }
-  }),
 
   monthName: Ember.computed('month', function () {
     return this.get('monthNames.%@'.fmt(this.get('month') - 1));
@@ -74,7 +22,7 @@ export default Ember.Component.extend({
     if (dates) {
       return dates;
     }
-    dates = generateDates(this.get('year'), this.get('month'));
+    dates = dateUtils['generateDates'](this.get('year'), this.get('month'));
     this.set("__cache__." + this.get('year') + "-" + this.get('month'), dates);
     return dates;
   }),
@@ -118,14 +66,14 @@ export default Ember.Component.extend({
       } else {
         var top = this.$().offset().top,
           winHeight = Ember.$(window).height(),
-          dpHeight = this.$().find('.dp').height();
+          dpHeight = this.$().find('.date-picker-modal').height();
 
         this.set('isUp', winHeight - top < dpHeight);
 
         if (this.isUp) {
-          this.$().find('.dp').css({top: '-' + (dpHeight + 3)+ 'px'});
+          this.$().find('.date-picker-modal').css({top: '-' + (dpHeight + 3)+ 'px'});
         } else {
-          this.$().find('.dp').removeAttr('style');
+          this.$().find('.date-picker-modal').removeAttr('style');
         }
 
         this.set('isOpen', true);

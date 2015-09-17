@@ -1,0 +1,38 @@
+<button class="{{buttonClass}}" {{action 'toggleActive' on="click"}}>{{value}}</button>
+
+<div class="modal {{if isActive 'modal-active'}}">
+  <div class="outer">
+    <div class="middle">
+      <div class="inner">
+        <div class="title">
+          <span>Date Selector</span>
+          <a class="close" role="button" {{action 'toggleActive' on="click"}}>&times;</a>
+        </div>
+
+        <div class="modal-body">
+          <div class="date-picker-header">{{value}}</div>
+          <div class="date-picker-year">
+            <div class="button-plus" {{action 'plus' 'year'}}>+</div>
+            <div class="span-value">{{input type="text" readonly=true value=year}}</div>
+            <div class="button-minus" {{action 'minus' 'year'}}>-</div>
+          </div>
+          <div class="date-picker-month">
+            <div class="button-plus" {{action 'plus' 'month'}}>+</div>
+            <div class="span-value">{{input type="text" readonly=true value=month}}</div>
+            <div class="button-minus" {{action 'minus' 'month'}}>-</div>
+          </div>
+          <div class="date-picker-date">
+            <div class="button-plus" {{action 'plus' 'date'}}>+</div>
+            <div class="span-value">{{input type="text" readonly=true value=date}}</div>
+            <div class="button-minus" {{action 'minus' 'date'}}>-</div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="{{buttonClass}}" {{action 'toggleActive' on="click"}}>OK</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
