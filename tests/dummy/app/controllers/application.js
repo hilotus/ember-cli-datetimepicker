@@ -5,5 +5,5 @@ export default Ember.Controller.extend({
 
   // date2: [2015, 8, 20],
 
-  time: ['04', '05', 'PM']
+  time: ['04', '05', 'AM']
 });

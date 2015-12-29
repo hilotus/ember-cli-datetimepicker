@@ -97,11 +97,17 @@ $date-picker-not-current-month-color: #B9B9B9;
       visibility: visible
     }
   }
+
+  input {
+    outline: none !important;
+    &.error {
+      border-color: #E0B4B4 !important;
+      color: #9F3A38 !important;
+    }
+  }
 }
 
 .time-picker {
-  text-align: center;
-
   .input-fake {
     padding: 4px 10px 4px 10px;
     color: #262626;
@@ -111,15 +117,13 @@ $date-picker-not-current-month-color: #B9B9B9;
     font-size: 12px;
     @include box-shadow(inset 0 0 0 1px #d6d6d6);
     @include transition(all 0.15s ease-in-out);
-
     &.focus { @include box-shadow(inset 0 0 0 1px rgba(50, 138, 214, 0.8)); }
 
-    select { width: 50px }
     input {
       outline: none;
       border: 0;
-      padding: 0;
-      width: 20px;
+      padding: 0 !important;
+      width: 20px !important;
       text-align: center;
       @include box-shadow(none);
       @include border-radius(0);

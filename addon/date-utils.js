@@ -71,7 +71,7 @@ var Calendar = Ember.Object.extend({
 
 Calendar.reopenClass({
   // type: pastDate, lastDate
-  generate: function (year, month, date, type) {
+  generate: function(year, month, date, type) {
     var calendar = this.create();
     calendar.set('year', year);
     calendar.set('month', month);
@@ -144,7 +144,7 @@ export var generateDates = function (year, month) {
   array date is equal
 */
 export var arraysEqual = function (a, b) {
-  if (a === b) {
+  if (a == b) {
     return true;
   }
   if (Ember.isBlank(a) || Ember.isBlank(b)) {
@@ -158,9 +158,15 @@ export var arraysEqual = function (a, b) {
   // the array, you should sort both arrays here.
   var i;
   for (i = 0; i < a.length; ++i) {
-    if (a[i] !== b[i]) {
+    if (a[i] != b[i]) {
       return false;
     }
   }
   return true;
+};
+
+var dateRegex = /^(\d{4})-(0[1-9]{1}|1[0-2])-(0[1-9]{1}|[1-2]\d{1}|3[0-1])$/;
+
+export var validateDateFormat = function (dateString) {
+  return dateRegex.test(dateString);
 };

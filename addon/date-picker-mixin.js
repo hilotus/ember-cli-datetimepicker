@@ -9,8 +9,7 @@ function leftPad(num, size) {
 }
 
 export default Ember.Mixin.create({
-  // yyyy-mm-dd
-  format: "%@-%@-%@",
+  format: 'yyyy-mm-dd',
 
   /*
     [year, month, date]
@@ -47,8 +46,20 @@ export default Ember.Mixin.create({
     return leftPad(this.get('model')[2], 2);
   }),
 
-  value: Ember.computed('model', function () {
-    var model = this.get('model');
-    return this.format.fmt(model[0], leftPad(model[1], 2), leftPad(model[2], 2));
+  value: Ember.computed('model', {
+    get: function() {
+      var model = this.get('model');
+      return '%@-%@-%@'.fmt(model[0], leftPad(model[1], 2), leftPad(model[2], 2));
+    },
+
+    set: function(key, value) {
+      return value;
+    }
+  }),
+
+  valueValidation: true,
+  valueValidationClass: Ember.computed('valueValidation', function() {
+    var css = this.get('valueValidation') ? 'ok' : 'error';
+    return new Ember.Handlebars.SafeString(css);
   })
 });

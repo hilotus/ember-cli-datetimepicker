@@ -1,22 +1,22 @@
 import Ember from 'ember';
-import { generateDates } from 'ember-cli-datetimepicker/date-utils';
+import { generateDates, validateDateFormat } from 'ember-cli-datetimepicker/date-utils';
 import datePickerMixin from 'ember-cli-datetimepicker/date-picker-mixin';
 
-// model is array, [2015, 01, 01]
 export default Ember.Component.extend(datePickerMixin, {
   classNames: ['date-picker'],
   isOpen: false,
-  isUp: false,
+  // 1. upward, 2. downward
+  direction: 'downward',
 
   __cache__: {},
   weekOptions: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
-  monthName: Ember.computed('month', function () {
+  monthName: Ember.computed('month', function() {
     return this.get('monthNames.%@'.fmt(this.get('month') - 1));
   }),
 
-  weekDates: Ember.computed('year', 'month', function () {
+  weekDates: Ember.computed('year', 'month', function() {
     var dates;
     dates = this.get("__cache__." + this.get('year') + "-" + this.get('month'));
     if (dates) {
@@ -45,47 +45,80 @@ export default Ember.Component.extend(datePickerMixin, {
     Ember.$(document).off('click', Ember.$.proxy(this.get('onClickElsewhere'), this));
   },
 
-  actions: {
-    toggleOpen: function(event)  {
-      var isOutside = false,
-        $self;
+  isOpenChanged: Ember.observer('isOpen', function() {
+    if (this.get('isOpen')) {
+      // var top = this.$().offset().top,
+        // winHeight = Ember.$(window).height(),
+      var dpHeight = this.$().find('.date-picker-modal').height();
 
-      if (event && ($self = this.$()[0])) {
+      // we now don't automatic set isUp, decide by user.
+      // this.set('isUp', winHeight - top < dpHeight);
+
+      if (this.get('direction') === 'upward') {
+        this.$().find('.date-picker-modal').css({top: '-' + (dpHeight + 3)+ 'px'});
+      } else {
+        this.$().find('.date-picker-modal').removeAttr('style');
+      }
+    }
+  }),
+
+  actions: {
+    toggleOpen: function() {
+      var isOutside = false,
+        $self = this.$()[0],
+        event = arguments[0];
+
+      if (event) {
         isOutside = !$self.contains(event.target);
         if (isOutside) {
           this.set('isOpen', false);
-        }
-      } else {
-        this.set('isOpen', !this.get('isOpen'));
-      }
-    },
-
-    openPicker: function () {
-      if (this.isOpen) {
-        this.set('isOpen', false);
-      } else {
-        var top = this.$().offset().top,
-          winHeight = Ember.$(window).height(),
-          dpHeight = this.$().find('.date-picker-modal').height();
-
-        this.set('isUp', winHeight - top < dpHeight);
-
-        if (this.isUp) {
-          this.$().find('.date-picker-modal').css({top: '-' + (dpHeight + 3)+ 'px'});
         } else {
-          this.$().find('.date-picker-modal').removeAttr('style');
+          this.set('isOpen', !this.get('isOpen'));
+          // this.set('isOpen', true);
         }
-
-        this.set('isOpen', true);
+      } else {
+        throw Error('You should make sure the first argument is JQuery.Event');
+        // this.set('isOpen', !this.get('isOpen'));
       }
     },
 
-    selectDate: function (date) {
-      this.set('model', [date.get('year'), date.get('month'), date.get('date')]);
-      this.set('isOpen', false);
+    /*
+      We should make sure date is a 'yyyy-mm-dd' or an instance of Calendar Class.
+    */
+    selectDate: function(date) {
+      if (typeof date === 'string') {
+        this.set('model', date.split('-').map(i => parseInt(i)));
+      } else {
+        this.set('model', [date.get('year'), date.get('month'), date.get('date')]);
+      }
     },
 
-    pastMonth: function () {
+    inputDate: function() {
+      var value = arguments[0],
+        event = arguments[1],
+        keyCode = event.which || event.keyCode;
+
+      if (keyCode === 13 || keyCode === 32) {
+        if (validateDateFormat(value)) {
+          this.send('selectDate', value);
+        }
+        event.preventDefault();
+      } else if (keyCode === 27) {
+        this.set('isOpen', false);
+      }
+    },
+
+    validatDate: function() {
+      var value = arguments[0],
+        event = arguments[1],
+        keyCode = event.which || event.keyCode;
+
+      if (keyCode !== 13 && keyCode !== 32 && keyCode !== 27) {
+        this.set('valueValidation', validateDateFormat(value));
+      }
+    },
+
+    pastMonth: function() {
       var month = window.parseInt(this.get('month')),
         year = window.parseInt(this.get('year')),
         date = window.parseInt(this.get('date'));
@@ -99,7 +132,7 @@ export default Ember.Component.extend(datePickerMixin, {
       this.set('model', [year, month, date]);
     },
 
-    nextMonth: function () {
+    nextMonth: function() {
       var month = window.parseInt(this.get('month')),
         year = window.parseInt(this.get('year')),
         date = window.parseInt(this.get('date'));

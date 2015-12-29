@@ -1,4 +1,4 @@
-<button class="{{buttonClass}}" {{action 'openPicker' on="click"}}>{{value}}</button>
+{{input value=value class=valueValidationClass placeholder=format key-down='inputDate' key-up='validatDate'}}
 
 <div class="date-picker-modal {{if isOpen 'visible' 'invisible'}} {{if isUp 'up'}}">
   <div class="date-picker-title">
@@ -19,7 +19,7 @@
         {{#each weekDates as |weekDate|}}
           <tr>
             {{#each weekDate as |d index|}}
-              {{date-picker-cell model=d today=today selected=selected action='selectDate'}}
+              {{date-picker-cell model=d today=today selected=model action='selectDate'}}
             {{/each}}
           </tr>
         {{/each}}
