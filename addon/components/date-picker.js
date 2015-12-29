@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import dateUtils from 'ember-cli-datetimepicker/date-utils';
-import datePickerMixin from 'ember-cli-datetimepicker/mixins/date-picker';
+import { generateDates } from 'ember-cli-datetimepicker/date-utils';
+import datePickerMixin from 'ember-cli-datetimepicker/date-picker-mixin';
 
 // model is array, [2015, 01, 01]
 export default Ember.Component.extend(datePickerMixin, {
@@ -22,7 +22,7 @@ export default Ember.Component.extend(datePickerMixin, {
     if (dates) {
       return dates;
     }
-    dates = dateUtils['generateDates'](this.get('year'), this.get('month'));
+    dates = generateDates(this.get('year'), this.get('month'));
     this.set("__cache__." + this.get('year') + "-" + this.get('month'), dates);
     return dates;
   }),

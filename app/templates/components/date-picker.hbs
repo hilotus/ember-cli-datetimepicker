@@ -19,7 +19,7 @@
         {{#each weekDates as |weekDate|}}
           <tr>
             {{#each weekDate as |d index|}}
-              <td class="{{if d.isPastDate 'date-picker-past-date'}} {{if d.isNextDate 'date-picker-next-date'}} {{is-equals d.dateArray today 'date-picker-today'}} {{is-equals d.dateArray selected 'date-picker-selected'}}" {{action 'selectDate' d}}><span data-year="{{d.year}}" data-month="{{d.month}}" data-date="{{d.date}}"></span></td>
+              {{date-picker-cell model=d today=today selected=selected action='selectDate'}}
             {{/each}}
           </tr>
         {{/each}}

@@ -139,3 +139,28 @@ export var generateDates = function (year, month) {
 
   return rows;
 };
+
+/*
+  array date is equal
+*/
+export var arraysEqual = function (a, b) {
+  if (a === b) {
+    return true;
+  }
+  if (Ember.isBlank(a) || Ember.isBlank(b)) {
+    return false;
+  }
+  if (a.length !== b.length) {
+    return false;
+  }
+
+  // If you don't care about the order of the elements inside
+  // the array, you should sort both arrays here.
+  var i;
+  for (i = 0; i < a.length; ++i) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+  return true;
+};

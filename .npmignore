@@ -3,6 +3,8 @@ tests/
 tmp/
 dist/
 
+app/styles/
+
 .bowerrc
 .editorconfig
 .ember-cli
