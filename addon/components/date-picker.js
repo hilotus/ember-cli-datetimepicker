@@ -7,6 +7,7 @@ export default Ember.Component.extend(datePickerMixin, {
   isOpen: false,
   // 1. upward, 2. downward
   direction: 'downward',
+  showLunarCalendar: false,
 
   __cache__: {},
   weekOptions: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
@@ -73,8 +74,11 @@ export default Ember.Component.extend(datePickerMixin, {
         if (isOutside) {
           this.set('isOpen', false);
         } else {
-          this.set('isOpen', !this.get('isOpen'));
-          // this.set('isOpen', true);
+          if (Ember.$(event.target).hasClass('ember-text-field') || Ember.$(event.target).parents('.date-picker-cell').length > 0) {
+            this.set('isOpen', !this.get('isOpen'));
+          } else {
+            this.set('isOpen', true);
+          }
         }
       } else {
         throw Error('You should make sure the first argument is JQuery.Event');

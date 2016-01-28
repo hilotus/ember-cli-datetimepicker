@@ -3,7 +3,13 @@ import { arraysEqual } from 'ember-cli-datetimepicker/date-utils';
 
 export default Ember.Component.extend({
   tagName: 'td',
-  classNameBindings: ['model.isPastDate:date-picker-past-date', 'model.isNextDate:date-picker-next-date', 'modelIsToday:date-picker-today', 'modelIsSelected:date-picker-selected'],
+  classNameBindings: [
+    ':date-picker-cell',
+    'model.isPastDate:date-picker-past-date',
+    'model.isNextDate:date-picker-next-date',
+    'modelIsToday:date-picker-today',
+    'modelIsSelected:date-picker-selected'
+  ],
 
   model: null,
   selected: null,

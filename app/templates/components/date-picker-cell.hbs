@@ -1,1 +1,6 @@
-<span data-year="{{model.year}}" data-month="{{model.month}}" data-date="{{model.date}}"></span>
+<span class="{{if parentView.showLunarCalendar 'line-height-2' 'line-height-3'}}">
+  <label class="gregorian-date">{{model.date}}</label>
+  {{#if parentView.showLunarCalendar}}
+    <label class="chinese-date">{{model.cnDate}}</label>
+  {{/if}}
+</span>
