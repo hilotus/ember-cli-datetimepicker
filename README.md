@@ -15,6 +15,8 @@ This README outlines the details of collaborating on this Ember addon.
 
 ## Usages
 
+NOTE: Lunar calendar only support 1900-2100.
+
 ```hbs
 {{!-- date = ['2014', '12', '12'] --}}
 {{date-picker model=date}}
@@ -23,6 +25,16 @@ This README outlines the details of collaborating on this Ember addon.
 ```hbs
 {{!-- date = null --}}
 {{date-picker model=date class="customeClass" direction="upward" showLunarCalendar=true}}
+```
+
+```hbs
+{{!--
+  calendar.stemBranch 甲午
+  calendar.animal 马
+  calendar.cnDate 腊月初五
+  calendar.cnShortDate 初五
+--}}
+{{date-picker model=date calendar=calendar}}
 ```
 
 ```hbs

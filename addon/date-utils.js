@@ -75,6 +75,9 @@ var sectionalTermMap = [[7, 6, 6, 6, 6, 6, 6, 6, 6, 5, 6, 6, 6, 5, 5, 6, 6, 5, 5
 var sectionalTermYear = [[13, 49, 85, 117, 149, 185, 201, 250, 250], [13, 45, 81, 117, 149, 185, 201, 250, 250], [13, 48, 84, 112, 148, 184, 200, 201, 250], [13, 45, 76, 108, 140, 172, 200, 201, 250], [13, 44, 72, 104, 132, 168, 200, 201, 250], [5, 33, 68, 96, 124, 152, 188, 200, 201], [29, 57, 85, 120, 148, 176, 200, 201, 250], [13, 48, 76, 104, 132, 168, 196, 200, 201], [25, 60, 88, 120, 148, 184, 200, 201, 250], [16, 44, 76, 108, 144, 172, 200, 201, 250], [28, 60, 92, 124, 160, 192, 200, 201, 250], [17, 53, 85, 124, 156, 188, 200, 201, 250]];
 var principleTermMap = [[21, 21, 21, 21, 21, 20, 21, 21, 21, 20, 20, 21, 21, 20, 20, 20, 20, 20, 20, 20, 20, 19, 20, 20, 20, 19, 19, 20], [20, 19, 19, 20, 20, 19, 19, 19, 19, 19, 19, 19, 19, 18, 19, 19, 19, 18, 18, 19, 19, 18, 18, 18, 18, 18, 18, 18], [21, 21, 21, 22, 21, 21, 21, 21, 20, 21, 21, 21, 20, 20, 21, 21, 20, 20, 20, 21, 20, 20, 20, 20, 19, 20, 20, 20, 20], [20, 21, 21, 21, 20, 20, 21, 21, 20, 20, 20, 21, 20, 20, 20, 20, 19, 20, 20, 20, 19, 19, 20, 20, 19, 19, 19, 20, 20], [21, 22, 22, 22, 21, 21, 22, 22, 21, 21, 21, 22, 21, 21, 21, 21, 20, 21, 21, 21, 20, 20, 21, 21, 20, 20, 20, 21, 21], [22, 22, 22, 22, 21, 22, 22, 22, 21, 21, 22, 22, 21, 21, 21, 22, 21, 21, 21, 21, 20, 21, 21, 21, 20, 20, 21, 21, 21], [23, 23, 24, 24, 23, 23, 23, 24, 23, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 22, 23, 22, 22, 22, 22, 23], [23, 24, 24, 24, 23, 23, 24, 24, 23, 23, 23, 24, 23, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 22, 23, 23], [23, 24, 24, 24, 23, 23, 24, 24, 23, 23, 23, 24, 23, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 22, 23, 23], [24, 24, 24, 24, 23, 24, 24, 24, 23, 23, 24, 24, 23, 23, 23, 24, 23, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 23], [23, 23, 23, 23, 22, 23, 23, 23, 22, 22, 23, 23, 22, 22, 22, 23, 22, 22, 22, 22, 21, 22, 22, 22, 21, 21, 22, 22, 22], [22, 22, 23, 23, 22, 22, 22, 23, 22, 22, 22, 22, 21, 22, 22, 22, 21, 21, 22, 22, 21, 21, 21, 22, 21, 21, 21, 21, 22]];
 var principleTermYear = [[13, 45, 81, 113, 149, 185, 201], [21, 57, 93, 125, 161, 193, 201], [21, 56, 88, 120, 152, 188, 200, 201], [21, 49, 81, 116, 144, 176, 200, 201], [17, 49, 77, 112, 140, 168, 200, 201], [28, 60, 88, 116, 148, 180, 200, 201], [25, 53, 84, 112, 144, 172, 200, 201], [29, 57, 89, 120, 148, 180, 200, 201], [17, 45, 73, 108, 140, 168, 200, 201], [28, 60, 92, 124, 160, 192, 200, 201], [16, 44, 80, 112, 148, 180, 200, 201], [17, 53, 88, 120, 156, 188, 200, 201]];
+var error = {
+  outOfRange: 'Lunar calendar only support 1900-2100'
+};
 
 var computeChineseFields = function (calendar) {
   var daysDiff, i, j, k, lastDate, nextMonth, ref, ref1, ref2, ref3, startDate, startMonth, startYear;
@@ -231,7 +234,7 @@ var principleTerm = function(year, month) {
   return term;
 };
 
-var Calendar = Ember.Object.extend({
+export var Calendar = Ember.Object.extend({
   year: 0,
   month: 0,
   date: 0,
@@ -259,6 +262,17 @@ var Calendar = Ember.Object.extend({
     } else if (this.date === this.principleTerm) {
       return principleTermNames[this.month - 1];
     } else {
+      return (this.chineseMonth < 0 ? "闰" : "") + chineseMonthNames[chineseMonth - 1] + "月" + chineseDateNames[this.chineseDate - 1];
+    }
+  }),
+
+  cnShortDate: Ember.computed('chineseMonth', 'chineseDate', 'sectionalTerm', 'principleTerm', function() {
+    var chineseMonth = Math.abs(this.chineseMonth);
+    if (this.date === this.sectionalTerm) {
+      return sectionalTermNames[this.month - 1];
+    } else if (this.date === this.principleTerm) {
+      return principleTermNames[this.month - 1];
+    } else {
       if (this.chineseDate === 1) {
         return (this.chineseMonth < 0 ? "闰" : "") + chineseMonthNames[chineseMonth - 1] + "月";
       } else {
@@ -273,14 +287,25 @@ var Calendar = Ember.Object.extend({
 
   animal: Ember.computed('chineseYear', function() {
     return animalNames[(this.chineseYear - 1) % 12];
-  })
+  }),
+
+  init: function() {
+    this._super.apply(this, arguments);
+
+    if (this.get('year') < 1901 || this.get('year') > 2100) {
+      Ember.Logger.warn(error.outOfRange);
+    }
+  }
 });
 
 Calendar.reopenClass({
-  // type: pastDate, lastDate
+  /*
+    type:
+      - pastDate
+      - nextDate
+  */
   generate: function(year, month, date, type) {
-    var calendar = this.create();
-    calendar.setProperties({
+    var calendar = this.create({
       year: year,
       month: month,
       date: date,

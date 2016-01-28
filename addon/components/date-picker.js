@@ -1,9 +1,10 @@
 import Ember from 'ember';
-import { generateDates, validateDateFormat } from 'ember-cli-datetimepicker/date-utils';
+import { Calendar, generateDates, validateDateFormat } from 'ember-cli-datetimepicker/date-utils';
 import datePickerMixin from 'ember-cli-datetimepicker/date-picker-mixin';
 
 export default Ember.Component.extend(datePickerMixin, {
   classNames: ['date-picker'],
+
   isOpen: false,
   // 1. upward, 2. downward
   direction: 'downward',
@@ -18,14 +19,34 @@ export default Ember.Component.extend(datePickerMixin, {
   }),
 
   weekDates: Ember.computed('year', 'month', function() {
-    var dates;
-    dates = this.get("__cache__." + this.get('year') + "-" + this.get('month'));
+    var dates = this.get("__cache__." + this.get('year') + "-" + this.get('month'));
     if (dates) {
       return dates;
     }
     dates = generateDates(this.get('year'), this.get('month'));
     this.set("__cache__." + this.get('year') + "-" + this.get('month'), dates);
     return dates;
+  }),
+
+  isOpenChanged: Ember.observer('isOpen', function() {
+    if (this.get('isOpen')) {
+      // var top = this.$().offset().top,
+        // winHeight = Ember.$(window).height(),
+      var dpHeight = this.$().find('.date-picker-modal').height();
+
+      // we now don't automatic set isUp, decide by user.
+      // this.set('isUp', winHeight - top < dpHeight);
+
+      if (this.get('direction') === 'upward') {
+        this.$().find('.date-picker-modal').css({top: '-' + (dpHeight + 3)+ 'px'});
+      } else {
+        this.$().find('.date-picker-modal').removeAttr('style');
+      }
+    }
+  }),
+
+  modelChanged: Ember.observer('year', 'month', 'date', function() {
+    this.set('calendar', Calendar.generate(this.get('year'), this.get('month'), this.get('date')));
   }),
 
   /*
@@ -45,23 +66,6 @@ export default Ember.Component.extend(datePickerMixin, {
     this._super.apply(this, arguments);
     Ember.$(document).off('click', Ember.$.proxy(this.get('onClickElsewhere'), this));
   },
-
-  isOpenChanged: Ember.observer('isOpen', function() {
-    if (this.get('isOpen')) {
-      // var top = this.$().offset().top,
-        // winHeight = Ember.$(window).height(),
-      var dpHeight = this.$().find('.date-picker-modal').height();
-
-      // we now don't automatic set isUp, decide by user.
-      // this.set('isUp', winHeight - top < dpHeight);
-
-      if (this.get('direction') === 'upward') {
-        this.$().find('.date-picker-modal').css({top: '-' + (dpHeight + 3)+ 'px'});
-      } else {
-        this.$().find('.date-picker-modal').removeAttr('style');
-      }
-    }
-  }),
 
   actions: {
     toggleOpen: function() {

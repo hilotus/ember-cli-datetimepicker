@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Controller.extend({
   date: ['2014', '12', '12'],
+  calendar: null,
 
   // date2: [2015, 8, 20],
 
