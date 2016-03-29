@@ -15,7 +15,7 @@ export default Ember.Component.extend(datePickerMixin, {
   monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 
   monthName: Ember.computed('month', function() {
-    return this.get('monthNames.%@'.fmt(this.get('month') - 1));
+    return this.get(`monthNames.${this.get('month') - 1}`);
   }),
 
   weekDates: Ember.computed('year', 'month', function() {

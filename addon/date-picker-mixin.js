@@ -9,8 +9,6 @@ function leftPad(num, size) {
 }
 
 export default Ember.Mixin.create({
-  format: 'yyyy-mm-dd',
-
   /*
     [year, month, date]
     [2014, 10, 10]
@@ -49,7 +47,7 @@ export default Ember.Mixin.create({
   value: Ember.computed('model', {
     get: function() {
       var model = this.get('model');
-      return '%@-%@-%@'.fmt(model[0], leftPad(model[1], 2), leftPad(model[2], 2));
+      return `${model[0]}-${leftPad(model[1], 2)}-${leftPad(model[2], 2)}`;
     },
 
     set: function(key, value) {

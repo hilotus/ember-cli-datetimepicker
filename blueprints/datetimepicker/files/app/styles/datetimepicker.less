@@ -1,0 +1,165 @@
+@date-picker-border-color: #E8E8E8;
+@date-picker-color: #3C262D;
+@date-picker-bg-color: #FFF;
+@date-picker-today-bgcolor: #EEF6FF;
+@date-picker-hover-bgcolor: #4366BC;
+@date-picker-hover-color: #FFF;
+@date-picker-not-current-month-bgcolor: #E8E8E8;
+@date-picker-not-current-month-color: #B9B9B9;
+
+.date-picker {
+  position: relative;
+  display: inline-block;
+
+  .date-picker-title {
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    position: relative;
+    border-bottom: 1px solid @date-picker-border-color;
+
+    span { font-size: 14px; }
+    .date-picker-next, .date-picker-past {
+      position: absolute;
+      top: 0;
+      cursor: pointer;
+      font-size: 14px;
+      width: 20px;
+      &:hover {
+        background-color: @date-picker-not-current-month-bgcolor;
+      }
+    }
+    .date-picker-next { right: 10px; }
+    .date-picker-past { left: 10px; }
+  }
+
+  .date-picker-body {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead th {
+        padding: 6px
+      }
+
+      tbody {
+        td {
+          cursor: pointer;
+          text-align: center;
+          border-top: 1px solid @date-picker-border-color;
+        }
+
+        td.date-picker-today {
+          background-color: @date-picker-today-bgcolor;
+        }
+
+        td.date-picker-selected, td:hover {
+          background-color: @date-picker-hover-bgcolor;
+          color: @date-picker-hover-color
+        }
+
+        .date-picker-past-date, .date-picker-next-date {
+          background-color: @date-picker-not-current-month-bgcolor;
+          color: @date-picker-not-current-month-color
+        }
+      }
+
+      thead th:not(:last-child), tbody td:not(:last-child) {
+        border-right: 1px solid @date-picker-border-color
+      }
+    }
+  }
+
+  .date-picker-modal {
+    position: absolute;
+    max-width: 360px;
+    color: @date-picker-color;
+    border: 1px solid @date-picker-border-color;
+    font-size: 12px;
+    background-color: @date-picker-bg-color;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    &.invisible {
+      display: none;
+      visibility: hidden
+    }
+    &.visible {
+      display: block;
+      visibility: visible
+    }
+  }
+
+  input {
+    outline: none !important;
+    &.error {
+      border-color: #E0B4B4 !important;
+      color: #9F3A38 !important;
+    }
+  }
+
+  .date-picker-cell {
+    span {
+      display: block;
+      width: 30px;
+      height: 30px;
+      -webkit-box-sizing: content-box;
+      -moz-box-sizing: content-box;
+      box-sizing: content-box;
+
+      .gregorian-date, .chinese-date {
+        cursor: inherit;
+        width: 100%;
+        float: left;
+        &:after { clear: both }
+      }
+    }
+    span.line-height-2 { line-height: 2 }
+    span.line-height-3 { line-height: 30px }
+  }
+}
+
+.time-picker {
+  .input-fake {
+    padding: 4px 10px 4px 10px;
+    color: #262626;
+    border: none;
+    background: #fff;
+    font-weight: 500;
+    font-size: 12px;
+    -webkit-box-shadow: inset 0 0 0 1px #d6d6d6;
+    -moz-box-shadow: inset 0 0 0 1px #d6d6d6;
+    box-shadow: inset 0 0 0 1px #d6d6d6;
+    -webkit-transition: all 0.15s ease-in-out;
+    -moz-transition: all 0.15s ease-in-out;
+    -ms-transition: all 0.15s ease-in-out;
+    -o-transition: all 0.15s ease-in-out;
+    &.focus {
+      -webkit-box-shadow: inset 0 0 0 1px rgba(50, 138, 214, 0.8);
+      -moz-box-shadow: inset 0 0 0 1px rgba(50, 138, 214, 0.8);
+      box-shadow: inset 0 0 0 1px rgba(50, 138, 214, 0.8);
+    }
+
+    input {
+      outline: none;
+      border: 0;
+      padding: 0 !important;
+      width: 20px !important;
+      text-align: center;
+      -webkit-box-shadow: none;
+      -moz-box-shadow: none;
+      box-shadow: none;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+      -moz-background-clip: padding;
+      -webkit-background-clip: padding-box;
+      background-clip: padding-box;
+      border-color: transparent !important
+    }
+  }
+}
